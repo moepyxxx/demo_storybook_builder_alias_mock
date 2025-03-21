@@ -6,6 +6,7 @@ export const Sample: FC = () => {
   const storage = getLocalStorageItem("sample");
   return (
     <div>
+      hogeとfugaについて！
       <p>hoge: {storage?.hoge}</p>
       <p>fuga: {storage?.fuga}</p>
     </div>
