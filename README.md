@@ -203,6 +203,10 @@ export default config;
 ```
 
 これでサブパスモジュールができる。
+`tsconfig-paths-webpack-plugin`は tsconfig.json のエイリアス設定を webpack 設定に上書きする。
+今回の場合は Storybook 上の webpack で上書きしていた。この設定を入れてしまうと、
+
+https://www.npmjs.com/package/tsconfig-paths-webpack-plugin
 
 ### わかってきたこと
 
