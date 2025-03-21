@@ -44,13 +44,6 @@
       "last 1 safari version"
     ]
   },
-  "imports": {
-    "#lib/session": {
-      "storybook": "./src/lib/session.mock.ts",
-      "default": "./src/lib/session.ts"
-    },
-    "#*": "./src/*"
-  },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
     "@storybook/addon-essentials": "^8.6.7",

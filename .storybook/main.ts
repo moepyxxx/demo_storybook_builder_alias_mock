@@ -22,11 +22,10 @@ const config: StorybookConfig = {
       config.resolve = {};
     }
     // config.resolve.plugins = [new TsconfigPathsPlugin()];
-    // config.resolve.alias = {
-    //   ...config.resolve?.alias,
-    //   "lib/session": path.resolve(__dirname, "../lib/session.mock.ts"),
-    // };
-    // console.log(config.resolve.alias);
+    config.resolve.alias = {
+      ...config.resolve?.alias,
+      "lib/session": path.resolve(__dirname, "../src/lib/session.mock.ts"),
+    };
     return config;
   },
 };

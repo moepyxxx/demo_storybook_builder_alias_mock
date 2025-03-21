@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Sample } from "./index";
-import { getLocalStorageItem, setLocalStorageItem } from "#lib/session.mock";
+import { getLocalStorageItem, setLocalStorageItem } from "lib/session.mock";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
