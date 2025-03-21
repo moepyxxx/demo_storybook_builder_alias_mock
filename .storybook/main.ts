@@ -1,6 +1,7 @@
 import { TsconfigPathsPlugin } from "tsconfig-paths-webpack-plugin";
 
 import type { StorybookConfig } from "@storybook/react-webpack5";
+import path from "node:path";
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
@@ -21,6 +22,11 @@ const config: StorybookConfig = {
       config.resolve = {};
     }
     config.resolve.plugins = [new TsconfigPathsPlugin()];
+    // config.resolve.alias = {
+    //   ...config.resolve?.alias,
+    //   "lib/session": path.resolve(__dirname, "../lib/session.mock.ts"),
+    // };
+    // console.log(config.resolve.alias);
     return config;
   },
 };

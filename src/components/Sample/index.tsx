@@ -1,4 +1,4 @@
-import { getLocalStorageItem, setLocalStorageItem } from "lib/session";
+import { getLocalStorageItem, setLocalStorageItem } from "#src/lib/session";
 import { FC } from "react";
 
 export const Sample: FC = () => {

@@ -19,8 +19,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "baseUrl": "src",
   },
   "include": ["src/**/*", "additional.d.ts"],
-  "exclude": ["node_modules", "**/*.stories.tsx", "**/*.mdx"]
+  "exclude": ["node_modules", "**/*.mdx"]
 }
