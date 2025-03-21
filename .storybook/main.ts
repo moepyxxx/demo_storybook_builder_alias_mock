@@ -21,7 +21,7 @@ const config: StorybookConfig = {
     if (!config.resolve) {
       config.resolve = {};
     }
-    config.resolve.plugins = [new TsconfigPathsPlugin()];
+    // config.resolve.plugins = [new TsconfigPathsPlugin()];
     // config.resolve.alias = {
     //   ...config.resolve?.alias,
     //   "lib/session": path.resolve(__dirname, "../lib/session.mock.ts"),
