@@ -211,7 +211,98 @@ https://github.com/dividab/tsconfig-paths-webpack-plugin/issues/8
 
 ### Step3 builder Alias を利用してモックができるようにする
 
-### わかってきたこと
+ビルダーエイリアスがうまく行ったコミット: 208c4b65b59e9173ce3bb88bf0e53146754f794a
+
+package.json は imports 属性を消す
+
+tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    // ...
+    "baseUrl": "src"
+  },
+  "include": ["src/**/*", "additional.d.ts"],
+  "exclude": ["node_modules", "**/*.mdx"]
+}
+```
+
+src/components/Sample/index.tsx
+
+```tsx
+import { getLocalStorageItem, setLocalStorageItem } from "lib/session";
+import { FC } from "react";
+import { Child } from "components/Child";
+
+export const Sample: FC = () => {
+  setLocalStorageItem("sample", { hoge: "ほげ", fuga: 42 });
+  const storage = getLocalStorageItem("sample");
+  return (
+    <div>
+      hogeとfugaについて！
+      <p>hoge: {storage?.hoge}</p>
+      <p>fuga: {storage?.fuga}</p>
+      <Child />
+    </div>
+  );
+};
+```
+
+src/components/Sample/index.stories.tsx
+
+```tsx
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { Sample } from "./index";
+import { getLocalStorageItem, setLocalStorageItem } from "lib/session.mock";
+
+// ...
+
+export const Primary: Story = {
+  async beforeEach() {
+    setLocalStorageItem.mockReturnValue();
+    getLocalStorageItem.mockReturnValue({ hoge: "mock hoge", fuga: 1000 });
+  },
+};
+```
+
+.storybook/main.ts
+
+```ts
+import { TsconfigPathsPlugin } from "tsconfig-paths-webpack-plugin";
+
+import type { StorybookConfig } from "@storybook/react-webpack5";
+import path from "node:path";
+
+const config: StorybookConfig = {
+  ...
+  webpackFinal: async (config) => {
+    if (!config.resolve) {
+      config.resolve = {};
+    }
+    // ここを入れるとmockを参照しなくなる
+    // config.resolve.plugins = [new TsconfigPathsPlugin()];
+    config.resolve.alias = {
+      ...config.resolve?.alias,
+      "lib/session": path.resolve(__dirname, "../src/lib/session.mock.ts"),
+    };
+    return config;
+  },
+};
+export default config;
+```
+
+### まとめ
+
+Subpath vs Builder においては、本番の方に全く影響を与えない Builder のほうが良さそうと判断。
+また、Subpath Import は形式的に`#`をつけるのが良いとされているため、大規模なパス回収が発生する可能性も場合によってある。
+これから既存の Storybook に回収を入れるなら BuilderAlias の採用が良さそう。
+
+Storybook のモジュールモックのアプローチは、パスエイリアスを利用してファイルそのものをモックに置き換えるというアプローチ。
+エイリアスがうまく晴れていない要素があると絶対にうまくいかないので、うまくいかない場合はエイリアスを疑うと良さそう。
+
+今回の場合は`tsconfig-paths-webpack-plugin`が全面的に悪さをしていたというお話。
 
 ### 参考
 
