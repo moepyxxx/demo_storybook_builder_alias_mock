@@ -65,14 +65,14 @@ https://zenn.dev/enish/articles/cde07d3d22f95b
 
 ### Step2 subpath imports を利用してモックができるようにする
 
-サブパスモジュールがうまく行ったコミット: 06e49e6cd79cddc3f5230ad4813322f4442fc091
+サブパスモジュールがうまく行ったコミット: 6424809b18f7983308f1f75c3bca1142b753db06
 
 package.json
 
 ```json
 {
   "imports": {
-    "#src/lib/session": {
+    "#lib/session": {
       "storybook": "./src/lib/session.mock.ts",
       "default": "./src/lib/session.ts"
     },
@@ -84,7 +84,6 @@ package.json
 tsconfig.json
 
 ```json
-// baseUrlを入れないのがミソ！！！！
 {
   "compilerOptions": {
     "target": "es5",
@@ -102,8 +101,9 @@ tsconfig.json
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
+    "baseUrl": "src",
     "paths": {
-      "#*": ["./*"]
+      "#*": ["*"]
     }
   },
   "include": ["src/**/*", "additional.d.ts"],
@@ -148,7 +148,7 @@ export const setLocalStorageItem = fn(actual.setLocalStorageItem).mockName(
 src/components/Sample/index.tsx
 
 ```tsx
-import { getLocalStorageItem, setLocalStorageItem } from "#src/lib/session";
+import { getLocalStorageItem, setLocalStorageItem } from "#lib/session";
 import { FC } from "react";
 
 export const Sample: FC = () => {
@@ -169,10 +169,7 @@ src/components/Sample/index.stories.tsx
 ```tsx
 import type { Meta, StoryObj } from "@storybook/react";
 import { Sample } from "./index";
-import {
-  getLocalStorageItem,
-  setLocalStorageItem,
-} from "#src/lib/session.mock";
+import { getLocalStorageItem, setLocalStorageItem } from "#lib/session.mock";
 // ...
 export const Primary: Story = {
   async beforeEach() {
@@ -203,10 +200,16 @@ export default config;
 ```
 
 これでサブパスモジュールができる。
-`tsconfig-paths-webpack-plugin`は tsconfig.json のエイリアス設定を webpack 設定に上書きする。
-今回の場合は Storybook 上の webpack で上書きしていた。この設定を入れてしまうと、
 
+`tsconfig-paths-webpack-plugin`のインポートをしてはいけないのがポイント。
 https://www.npmjs.com/package/tsconfig-paths-webpack-plugin
+
+`tsconfig-paths-webpack-plugin`は tsconfig.json のエイリアス設定を webpack 設定に上書きする。
+今回の場合は Storybook 上の webpack で上書きしていた。特に`baseUrl`や`paths`を指定している時にこの設定を入れてしまうと、Storybook がサブパスモジュールを通らなくなってしまいエラーになる。おそらく事前に`config.resolve.alias`に色々と書き込みをしたものがあっても、プラスイン発火のタイミングで`tsconfig-paths-webpack-plugin`がそれを全面的に上書きしてしまっている気がします。そのため、`package.json`の`imports`属性のいうことを聞かない…みたいなことがあり得そう。
+
+https://github.com/dividab/tsconfig-paths-webpack-plugin/issues/8
+
+### Step3 builder Alias を利用してモックができるようにする
 
 ### わかってきたこと
 
