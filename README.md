@@ -1,4 +1,4 @@
-## 　 Storybook でモジュールをモックする方法について
+## Storybook でモジュールをモックする方法について
 
 ### STEP1 Storybook8 系 + Create React App 環境を作る
 
